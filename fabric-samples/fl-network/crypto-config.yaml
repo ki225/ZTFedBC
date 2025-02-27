@@ -1,0 +1,31 @@
+OrdererOrgs:
+  - Name: OrderingService
+    Domain: fl-network.com
+    EnableNodeOUs: true     ## 如果设置了 EnableNodeOUs ，就在msp下生成config.yaml文件
+    Specs:
+      - Hostname: orderer1
+      - Hostname: orderer2
+      - Hostname: orderer3
+
+PeerOrgs:
+  - Name: CompanyA
+    Domain: companyA.fl-network.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2  # company A have 2 peer nodes
+    Users:
+      Count: 1  # 1 managed acc
+    Specs:
+      - Hostname: peer0
+      - Hostname: peer1
+      
+  - Name: CompanyB
+    Domain: companyB.fl-network.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1  
+    Users:
+      Count: 1
+    Specs:
+      - Hostname: peer0
+      - Hostname: peer1
