@@ -55,14 +55,14 @@ General:
     # a client before closing the connection.
     ServerTimeout: 20s
   # Config defines the configuration options for backoff GRPC client.
-  Backoff:
-    # BaseDelay is the amount of time to backoff after the first failure.
-    BaseDelay: 1s
-    # Multiplier is the factor with which to multiply backoffs after a
-    # failed retry. Should ideally be greater than 1.
-    Multiplier: 1.6
-    # MaxDelay is the upper bound of backoff delay.
-    MaxDelay: 2m
+  # Backoff:
+  #   # BaseDelay is the amount of time to backoff after the first failure.
+  #   BaseDelay: 1s
+  #   # Multiplier is the factor with which to multiply backoffs after a
+  #   # failed retry. Should ideally be greater than 1.
+  #   Multiplier: 1.6
+  #   # MaxDelay is the upper bound of backoff delay.
+  #   MaxDelay: 2m
 
   # Since all nodes should be consistent it is recommended to keep
   # the default value of 100MB for MaxRecvMsgSize & MaxSendMsgSize
@@ -78,14 +78,14 @@ General:
   # and organizations at a given unit of time governed by the inactivity timeout.
   # When a client's rate of transaction submission exhausts its allocated budget,
   # it is throttled until additional "budget" is allocated (it is allocated once per second).
-  Throttling:
-    # Rate is the maximum rate (transactions per second) for all clients combined.
-    # A zero rate disables throttling.
-    Rate: 0
-    # InactivityTimeout defines the time frame after which
-    # inactive clients are pruned from memory and are not considered
-    # when allocating the budget for throttling per client.
-    InactivityTimeout: 5s
+  # Throttling:
+  #   # Rate is the maximum rate (transactions per second) for all clients combined.
+  #   # A zero rate disables throttling.
+  #   Rate: 0
+  #   # InactivityTimeout defines the time frame after which
+  #   # inactive clients are pruned from memory and are not considered
+  #   # when allocating the budget for throttling per client.
+  #   InactivityTimeout: 5s
 
   # Cluster settings for ordering service nodes that communicate with other ordering service nodes
   # such as Raft based ordering service.
@@ -135,12 +135,14 @@ General:
   # orderer. It is set relative here as a default for dev environments but
   # should be changed to the real location in production.
   # LocalMSPDir: msp
-  LocalMSPDir: /var/hyperledger/orderer/msp
+  # LocalMSPDir: /var/hyperledger/orderer/msp
+  LocalMSPDir: /crypto-config/ordererOrganizations/fl-network.com/orderers/orderer1.fl-network.com/msp
 
   # LocalMSPID is the identity to register the local MSP material with the MSP
   # manager. The sample organization defined in the
   # sample configuration provided has an MSP ID of "SampleOrg".
-  LocalMSPID: SampleOrg
+  # LocalMSPID: SampleOrg
+  LocalMSPID: Orderer1MSP
 
   # Enable an HTTP service for Go "pprof" profiling as documented at:
   # https://golang.org/pkg/net/http/pprof
