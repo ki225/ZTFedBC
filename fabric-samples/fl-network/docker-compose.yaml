@@ -14,13 +14,13 @@ networks:
 services:
   orderer1.fl-network.com:
     container_name: orderer1.fl-network.com
-    image: hyperledger/fabric-orderer:2.5
+    image: hyperledger/fabric-orderer:latest
     environment:
       - ORDERER_GENERAL_LOGLEVEL=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
-      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPID=Orderer1MSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
@@ -30,21 +30,24 @@ services:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
       - ./crypto-config/ordererOrganizations/fl-network.com/orderers/orderer1.fl-network.com/msp:/var/hyperledger/orderer/msp
       - ./crypto-config/ordererOrganizations/fl-network.com/orderers/orderer1.fl-network.com/tls:/var/hyperledger/orderer/tls
-      - orderer1.fl-network.com:/var/hyperledger/production/orderer
+      - ./crypto-config/ordererOrganizations/fl-network.com/orderers/orderer1.fl-network.com:/var/hyperledger/production/orderer
     ports:
       - 7050:7050
     networks:
       - fl-network
+    dns:
+      - 8.8.8.8   # 使用 Google DNS
+      - 8.8.4.4   # 另一個備用 DNS
   
   orderer2.fl-network.com:
     container_name: orderer2.fl-network.com
-    image: hyperledger/fabric-orderer:2.5
+    image: hyperledger/fabric-orderer:latest
     environment:
       - ORDERER_GENERAL_LOGLEVEL=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
-      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPID=Orderer2MSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
@@ -54,7 +57,7 @@ services:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
       - ./crypto-config/ordererOrganizations/fl-network.com/orderers/orderer2.fl-network.com/msp:/var/hyperledger/orderer/msp
       - ./crypto-config/ordererOrganizations/fl-network.com/orderers/orderer2.fl-network.com/tls:/var/hyperledger/orderer/tls
-      - orderer2.fl-network.com:/var/hyperledger/production/orderer
+      - ./crypto-config/ordererOrganizations/fl-network.com/orderers/orderer2.fl-network.com:/var/hyperledger/production/orderer
     ports:
       - 7049:7049
     networks:
@@ -62,13 +65,14 @@ services:
 
   orderer3.fl-network.com:
     container_name: orderer3.fl-network.com
-    image: hyperledger/fabric-orderer:2.5
+    image: hyperledger/fabric-orderer:latest
     environment:
       - ORDERER_GENERAL_LOGLEVEL=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7048
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
-      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPID=Orderer3MSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
@@ -78,7 +82,7 @@ services:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
       - ./crypto-config/ordererOrganizations/fl-network.com/orderers/orderer3.fl-network.com/msp:/var/hyperledger/orderer/msp
       - ./crypto-config/ordererOrganizations/fl-network.com/orderers/orderer3.fl-network.com/tls:/var/hyperledger/orderer/tls
-      - orderer3.fl-network.com:/var/hyperledger/production/orderer
+      - ./crypto-config/ordererOrganizations/fl-network.com/orderers/orderer3.fl-network.com:/var/hyperledger/production/orderer
     ports:
       - 7048:7048
     networks:
@@ -86,7 +90,7 @@ services:
 
   peer0.companyA.fl-network.com:
     container_name: peer0.companyA.fl-network.com
-    image: hyperledger/fabric-peer:2.5 
+    image: hyperledger/fabric-peer:latest 
     environment:
       - CORE_PEER_ID=peer0.companyA.fl-network.com
       - CORE_PEER_ADDRESS=peer0.companyA.fl-network.com:7051
@@ -104,7 +108,7 @@ services:
     volumes:
       - ./crypto-config/peerOrganizations/companyA.fl-network.com/peers/peer0.companyA.fl-network.com/msp:/etc/hyperledger/fabric/msp
       - ./crypto-config/peerOrganizations/companyA.fl-network.com/peers/peer0.companyA.fl-network.com/tls:/etc/hyperledger/fabric/tls
-      - peer0.companyA.fl-network.com:/var/hyperledger/production
+      - ./crypto-config/peerOrganizations/companyA.fl-network.com/peers/peer0.companyA.fl-network.com:/var/hyperledger/production
     ports:
       - 7051:7051
       - 7052:7052
@@ -114,7 +118,7 @@ services:
 
   peer0.companyB.fl-network.com:
     container_name: peer0.companyB.fl-network.com
-    image: hyperledger/fabric-peer:2.5 
+    image: hyperledger/fabric-peer:latest 
     environment:
       - CORE_PEER_ID=peer0.companyB.fl-network.com
       - CORE_PEER_ADDRESS=peer0.companyB.fl-network.com:8051
@@ -132,7 +136,7 @@ services:
     volumes:
       - ./crypto-config/peerOrganizations/companyB.fl-network.com/peers/peer0.companyB.fl-network.com/msp:/etc/hyperledger/fabric/msp
       - ./crypto-config/peerOrganizations/companyB.fl-network.com/peers/peer0.companyB.fl-network.com/tls:/etc/hyperledger/fabric/tls
-      - peer0.companyB.fl-network.com:/var/hyperledger/production
+      - ./crypto-config/peerOrganizations/companyA.fl-network.com/peers/peer0.companyB.fl-network.com:/var/hyperledger/production
     ports:
       - 8051:8051
       - 8052:8052
@@ -142,7 +146,7 @@ services:
 
   cli:
     container_name: cli
-    image: hyperledger/fabric-tools:2.5
+    image: hyperledger/fabric-tools:latest
     tty: true
     stdin_open: true
     environment:
